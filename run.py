@@ -1,6 +1,7 @@
 import argparse
 from simulate_game import Simulation
 import time
+import os
 
 if __name__ == '__main__':
     print("Hello there!")
@@ -21,8 +22,15 @@ if __name__ == '__main__':
     args.parallel_runs = int(args.parallel_runs)
 
     print(f"cards_amount: {args.cards_amount}, seed: {args.seed}")
+    command_string = f"python3 run.py --cards-amount {args.cards_amount} --games-to-play {args.games_to_play} --parallel-runs {args.parallel_runs} --seed {args.seed}"
 
-    simulation = Simulation(args.seed, args.cards_amount, args.games_to_play, args.parallel_runs, time.strftime("%Y%m%d-%H%M", time.localtime()))
+    ts = time.strftime("%Y%m%d-%H%M", time.localtime())
+    folder = f"results/{ts}"
+    os.makedirs(folder, exist_ok=True)
+    with open(f"{folder}/command.txt", "w") as f:
+        f.write(command_string)
+
+    simulation = Simulation(args.seed, args.cards_amount, args.games_to_play, args.parallel_runs, f"not_invalid_{ts}")
     print("begin sim")
     simulation.run( progress_bar=True )
     print("sim is done")

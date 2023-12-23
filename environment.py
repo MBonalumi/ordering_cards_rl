@@ -10,7 +10,7 @@ class ordering_cards_env(gym.Env):
 
     def __init__(self, id=0, seed=None, cards_amount=10, ts="0000000"):
         self.game = Game(id, seed, cards_amount, ts)
-        self.cards = None
+        self.cards = np.array([])
 
         self.action_space = gym.spaces.Discrete(cards_amount)
         self.observation_space = gym.spaces.MultiDiscrete([41] * cards_amount * 2, dtype=np.int32)
@@ -40,7 +40,7 @@ class ordering_cards_env(gym.Env):
             observation = np.zeros(self.cards.size*2, dtype=np.int32) + 40
             observation[self.cards.size : self.cards.size+len(board)] = board
             observation[:self.cards.size] = self.cards
-            return observation, -10.0, False, False, {}
+            return observation, -1.0, False, False, {}
         
         self.actions_history.append(action)
 
@@ -54,5 +54,6 @@ class ordering_cards_env(gym.Env):
         observation[self.cards.size : self.cards.size+len(board)] = board
         observation[:self.cards.size] = self.cards
         
-        return observation, reward, terminated, False, {}
+        return observation, 1.0, terminated, False, {}
+        # return observation, reward, terminated, False, {}
         # return observation, reward, terminated, truncated, info

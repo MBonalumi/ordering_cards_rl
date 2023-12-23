@@ -10,7 +10,7 @@ print_card = lambda num: card_signs[get_card_value(num)] + icons[get_card_suit(n
 
 class Game:
     def __init__(self, id=0, seed=None, cards_amount=4, ts="000000") -> None:
-        self.id = np.random.randint(10,1000)
+        self.id = id
         if seed is not None:
             np.random.seed(seed)
         self.ts = ts
@@ -18,12 +18,11 @@ class Game:
         
         self.deck = np.arange(40, dtype=np.int32)
         self.board = []
-        self.distributed_cards = None
-
+        self.distributed_cards = []
 
     def start_game(self):
         self.board = []
-        self.distributed_cards = None
+        self.distributed_cards = []
         return self.distribute_cards()
     
     def distribute_cards(self):
@@ -50,7 +49,7 @@ class Game:
         with open(f"{folder}/logs.txt", "a", encoding='utf-8') as f:
             f.write(string_to_write + "\n")
 
-    def throw_card(self, card_position) -> (np.float32, bool) :
+    def throw_card(self, card_position):
         card = self.distributed_cards[card_position]
         self.board.append(card)
         assert len(self.board) == len(set(self.board)), "There are duplicates in the board"
